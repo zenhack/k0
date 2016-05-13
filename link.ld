@@ -11,7 +11,6 @@
  * (processors started after the first one) jump to, but this is handled by the
  * already running kernel. */
 ENTRY(bsp_start)
-OUTPUT_FORMAT(elf32-i386)
 
 /* Make sure we don't overflow the region of memory we're loading into.
  * The region is 408.5K, but ld's syntax won't do fractional values, hence the
@@ -30,11 +29,14 @@ SECTIONS
 	 * additional CPUs can jump to something inside the kernel image when
 	 * they are started. */
 	. = 0x7e00;
+	.mboot :
+	{
+		*(.mboot)
+	} >kimage
 	. = ALIGN(4096);
 	.text :
 	{
 		code = .; _code = .; __code = .;
-		*(.mboot)
 		*(.text)
 		. = ALIGN(4096);
 	} >kimage
