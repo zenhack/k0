@@ -1,0 +1,11 @@
+Throughout the source tree, you will sometimes see comments with
+[citations]. This file contains information about the resources to which
+they refer.
+
+Please keep this list in alphabetical order:
+
+[intel/*/*]: Intel manual (/volume/section)
+    https://www-ssl.intel.com/content/www/us/en/processors/architectures-software-developer-manuals.html
+
+[osdev/*]: osdev wiki.
+    http:// wiki.osdev.org/*
