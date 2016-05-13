@@ -1,0 +1,6 @@
+*.o
+/k.elf
+/boot_iso/boot/k.elf
+/boot.iso
+/Cargo.lock
+/target
