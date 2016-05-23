@@ -16,7 +16,6 @@ clean:
 
 # Boot media #
 boot.iso: boot_iso/boot/k.elf boot_iso/boot/grub/grub.cfg
-	cp k.elf boot_iso/boot/
 	grub-mkrescue -o $@ boot_iso
 boot_iso/boot/k.elf: k.elf
 	cp $< $@
