@@ -9,3 +9,5 @@ Please keep this list in alphabetical order:
 
 [osdev/*]: osdev wiki.
     http:// wiki.osdev.org/*
+
+http://os.phil-opp.com/entering-longmode.html
