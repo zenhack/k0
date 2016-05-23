@@ -10,7 +10,7 @@
  * There's another entry point, ap_start, which the application processors
  * (processors started after the first one) jump to, but this is handled by the
  * already running kernel. */
-ENTRY(bsp_start)
+ENTRY(bsp_start32)
 
 /* Make sure we don't overflow the region of memory we're loading into.
  * The region is 408.5K, but ld's syntax won't do fractional values, hence the
