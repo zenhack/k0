@@ -8,22 +8,32 @@ rust_src := $(shell find src/ -name '*.rs')
 rust_lib := target/$(TARGET)/debug/libk0.a
 
 # "Standard" targets; things which are convential for most Makefiles.
-all: k.elf
+all: k.elf32
 clean:
-	rm -f *.o k.elf boot_iso/boot/k.elf boot.iso
+	find -name 'k.elf*' -delete
+	rm -f *.o boot.iso
 	cargo clean
 
 
 # Boot media #
-boot.iso: boot_iso/boot/k.elf boot_iso/boot/grub/grub.cfg
+boot.iso: boot_iso/boot/k.elf32 boot_iso/boot/grub/grub.cfg
 	grub-mkrescue -o $@ boot_iso
-boot_iso/boot/k.elf: k.elf
+boot_iso/boot/k.elf32: k.elf32
 	cp $< $@
 
 # The kernel proper. Most of the source is rust, which gets handled by cargo;
 # all that we have to handle is the assembly source and the linking.
-k.elf: boot.o link.ld $(rust_lib)
+k.elf64: boot.o link.ld $(rust_lib)
 	$(LD) -o $@ boot.o $(rust_lib) -T link.ld
+
+# The 64-bit elf doesn't play nicely with grub; imperically it places the
+# multiboot header *way* after the 8KiB mark in the file (even though it's still
+# the first actual thing...) and I'm not sure grub knows enough to load an
+# elf64 by itself anyway. To get around this, we copy everything into an elf32,
+# which does the job:
+k.elf32: k.elf64
+	objcopy -O elf32-i386 $< $@
+
 boot.o: boot.s
 	$(AS) -o $@ $<
 $(rust_lib): $(rust_src)

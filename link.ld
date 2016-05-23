@@ -32,8 +32,8 @@ SECTIONS
 	.mboot :
 	{
 		*(.mboot)
+		. = ALIGN(4096);
 	} >kimage
-	. = ALIGN(4096);
 	.text :
 	{
 		code = .; _code = .; __code = .;

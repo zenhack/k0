@@ -22,7 +22,6 @@ mboot_header:
 .text
 .code32
 bsp_start:
-	int $3
 	hlt
 	jmp bsp_start
 
