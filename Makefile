@@ -43,9 +43,9 @@ $(rust_lib): $(rust_src)
 # tasks. The *-gdb variants start qemu with remote debugging. The *-grub-*
 # variants boot from a cdrom with grub, whereas the others use qemu's built-in
 # multiboot support.
-qemu-run: k.elf
+qemu-run: k.elf32
 	qemu-system-x86_64 -kernel $<
-qemu-gdb: k.elf
+qemu-gdb: k.elf32
 	qemu-system-x86_64 -kernel $< -s -S
 qemu-grub-run: boot.iso
 	qemu-system-x86_64 -cdrom $<
