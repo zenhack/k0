@@ -42,9 +42,11 @@ $(rust_lib): $(rust_src)
 	cargo build --target=$(TARGET)
 
 # "Run" targets; not building anything, just convenience targets for other
-# tasks. The *-gdb variants start qemu with remote debugging. The *-grub-*
-# variants boot from a cdrom with grub, whereas the others use qemu's built-in
-# multiboot support.
+# tasks. The *-gdb variants start qemu with remote debugging. The qemu-grub-*
+# variants boot qemu from a cdrom with grub, whereas the other qemu targets
+# qemu's built-in multiboot support. bochs-run boots bochs from the cdrom.
+bochs-run: boot.iso
+	bochs
 qemu-run: k.elf32
 	qemu-system-x86_64 -kernel $<
 qemu-gdb: k.elf32
