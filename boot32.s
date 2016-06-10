@@ -23,7 +23,9 @@
 .set GDT_EXEC, (1<<43)
 .set GDT_DESC_TYPE_CODE_DATA, (1<<44)
 .set GDT_PRESENT, (1<<47)
-.set GDT_64, (1<<53)
+.set GDT_64, (1<<54)
+
+.set GDT_MAX_LIMIT, 0xffff | (0xf<<48)
 
 .set GDT_OFFSET_CODE, 8
 .set GDT_OFFSET_DATA, 16
@@ -56,7 +58,6 @@ bsp_start32:
 
 	/* update segment selectors: */
 	movw $GDT_OFFSET_DATA, %ax
-	jmp hang /* past this point we get a triple fault. */
 	movw %ax, %ss
 	movw %ax, %ds
 	movw %ax, %es
@@ -119,8 +120,8 @@ boot_stack: /* stack grows down on x86, so this is the base of the stack. */
 .section .rodata
 gdt:
 	.quad 0
-	.quad GDT_DESC_TYPE_CODE_DATA | GDT_PRESENT | GDT_RW
-	.quad GDT_DESC_TYPE_CODE_DATA | GDT_PRESENT | GDT_RW | GDT_EXEC | GDT_64
+	.quad GDT_DESC_TYPE_CODE_DATA | GDT_MAX_LIMIT | GDT_PRESENT | GDT_RW | GDT_EXEC | GDT_64
+	.quad GDT_DESC_TYPE_CODE_DATA | GDT_MAX_LIMIT | GDT_PRESENT | GDT_RW
 gdt_ptr:
 	.word ((3*8) - 1) /* 3 entries at 8 bytes each, -1 because gdt weirdness */
 	.quad gdt
