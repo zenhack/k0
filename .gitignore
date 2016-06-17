@@ -1,4 +1,5 @@
 *.o
+*.swp
 k.elf*
 /boot.iso
 /Cargo.lock
