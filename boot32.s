@@ -67,10 +67,6 @@ bsp_start32:
 
 	jmpl $GDT_OFFSET_CODE, $bsp_start64
 
-hang:
-	hlt
-	jmp hang
-
 build_page_tables:
 	/* Identity map the first 2 MiB via a single huge page. That's enough
          * to cover our kernel and then some; we'll set something nicer up when
