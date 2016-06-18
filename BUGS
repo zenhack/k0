@@ -1,0 +1,5 @@
+# Linker script does not stop creating executables over the specified memory limit.
+
+We accidentally linked in libcore, making the executable ~1.3MiB. The linker
+should have complained because of the MEMORY constraint; we need to figure out
+why it didn't.
