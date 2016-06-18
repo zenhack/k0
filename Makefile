@@ -5,7 +5,7 @@ AS ?= $(TARGET)-as
 LD ?= $(TARGET)-ld
 
 rust_src := $(shell find src/ -name '*.rs')
-rust_lib := target/$(TARGET)/debug/libk0.a
+rust_lib := target/$(TARGET)/release/libk0.a
 
 asm_objects := boot32.o boot64.o
 
@@ -39,7 +39,7 @@ k.elf32: k.elf64
 %.o: %.s
 	$(AS) -o $@ $<
 $(rust_lib): $(rust_src)
-	cargo build --target=$(TARGET)
+	cargo build --release --target=$(TARGET)
 
 # "Run" targets; not building anything, just convenience targets for other
 # tasks. The *-gdb variants start qemu with remote debugging. The qemu-grub-*
