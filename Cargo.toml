@@ -5,3 +5,6 @@ authors = ["Ian Denhardt <ian@zenhack.net>"]
 
 [lib]
 crate-type = ["staticlib"]
+
+[dependencies]
+rlibc = "1.0.0"
