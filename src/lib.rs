@@ -3,5 +3,6 @@
 
 mod runtime;
 pub mod boot;
+pub mod console;
 
 // vim: set ts=2 sw=2 et :
