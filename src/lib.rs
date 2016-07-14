@@ -1,7 +1,9 @@
 #![feature(lang_items)]
+#![feature(asm)]
 #![no_std]
 
 mod runtime;
+pub mod portio;
 pub mod boot;
 pub mod console;
 
