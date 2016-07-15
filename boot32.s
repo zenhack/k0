@@ -1,3 +1,8 @@
+/* Initial bringup; grub -> 64-bit mode.
+ *
+ * Much of this is based on [rust-longmode], though we do a few things
+ * differently.
+ */
 .global bsp_start32
 .global mboot_header
 

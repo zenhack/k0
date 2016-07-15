@@ -10,4 +10,8 @@ Please keep this list in alphabetical order:
 [osdev/*]: osdev wiki.
     http:// wiki.osdev.org/*
 
-http://os.phil-opp.com/entering-longmode.html
+[rust-longmode]:
+    http://os.phil-opp.com/entering-longmode.html
+
+[molloy]:  JamesM's kernel development tutorials
+    https://web.archive.org/web/20160304045551/http://www.jamesmolloy.co.uk/tutorial_html/

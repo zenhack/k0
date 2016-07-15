@@ -16,6 +16,7 @@ pub fn set_cell(x : usize, y : usize, fg : Color, bg : Color, chr : u8) {
 }
 
 pub fn move_cursor(x : u8, y : u8) {
+  // The procedure here is pulled from [molloy], mostly for the magic constants.
   let cmd_port  : u16 = 0x3d4;
   let data_port : u16 = 0x3d5;
   let set_hi : u8 = 14;
