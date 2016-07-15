@@ -3,7 +3,7 @@
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 pub unsafe fn outb(port : u16, data : u8) {
   asm!("outb $0, $1"
-       :: "{ax}"(data), "{dx}"(port)
+       :: "{al}"(data), "{dx}"(port)
        :: "volatile"
        );
 }
@@ -13,7 +13,7 @@ pub unsafe fn outb(port : u16, data : u8) {
 pub unsafe fn inb(port : u16) -> u8 {
   let result: u8;
   asm!("inb $1, $0"
-       : "={ax}"(result)
+       : "={al}"(result)
        : "{dx}"(port)
        :: "volatile"
        );
