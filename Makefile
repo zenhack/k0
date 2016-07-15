@@ -47,14 +47,17 @@ $(rust_lib): $(rust_src)
 # qemu's built-in multiboot support. bochs-run boots bochs from the cdrom.
 bochs-run: boot.iso
 	bochs
+
+qemu_flags := -serial stdio
+
 qemu-run: k.elf32
-	qemu-system-x86_64 -kernel $<
+	qemu-system-x86_64 $(qemu_flags) -kernel $<
 qemu-gdb: k.elf32
-	qemu-system-x86_64 -kernel $< -s -S
+	qemu-system-x86_64 $(qemu_flags) -kernel $< -s -S
 qemu-grub-run: boot.iso
-	qemu-system-x86_64 -cdrom $<
+	qemu-system-x86_64 $(qemu_flags) -cdrom $<
 qemu-grub-gdb: boot.iso
-	qemu-system-x86_64 -cdrom $< -s -S
+	qemu-system-x86_64 $(qemu_flags) -cdrom $< -s -S
 
 
 .PHONY: qemu-run qemu-gdb clean
