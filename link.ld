@@ -31,7 +31,7 @@ SECTIONS
 	. = 0x7e00;
 	.mboot :
 	{
-		*(.mboot)
+		KEEP(*(.mboot))
 		. = ALIGN(4096);
 	} >kimage
 	.text :

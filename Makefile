@@ -26,7 +26,7 @@ boot_iso/boot/k.elf32: k.elf32
 # The kernel proper. Most of the source is rust, which gets handled by cargo;
 # all that we have to handle is the assembly source and the linking.
 k.elf64: $(asm_objects) link.ld $(rust_lib)
-	$(LD) -o $@ $(asm_objects) $(rust_lib) -T link.ld
+	$(LD) -o $@ $(asm_objects) $(rust_lib) -T link.ld --gc-sections
 
 # The 64-bit elf doesn't play nicely with grub; imperically it places the
 # multiboot header *way* after the 8KiB mark in the file (even though it's still

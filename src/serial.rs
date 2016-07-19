@@ -1,5 +1,6 @@
 
 use super::portio;
+use core::fmt::{Write, Result};
 
 // Polling serial driver
 
@@ -28,6 +29,15 @@ pub fn putc(serial_port : SerialPort, byte : u8) {
     while (portio::inb(port + LINE_STATUS_REG) & LINE_READY_STATUS) == 0 {
     }
     portio::outb(port + DATA_REG, byte)
+  }
+}
+
+impl Write for SerialPort {
+  fn write_str(&mut self, s : &str) -> Result {
+    for b in s.bytes() {
+      putc(SerialPort(self.0), b)
+    }
+    Ok(())
   }
 }
 

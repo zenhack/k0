@@ -2,7 +2,7 @@
 #![feature(asm)]
 #![no_std]
 
-mod runtime;
+pub mod runtime;
 pub mod serial;
 pub mod portio;
 pub mod boot;
