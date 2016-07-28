@@ -7,5 +7,6 @@ pub mod serial;
 pub mod portio;
 pub mod boot;
 pub mod console;
+mod idt;
 
 // vim: set ts=2 sw=2 et :
