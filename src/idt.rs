@@ -1,12 +1,47 @@
 
 
+#[repr(C)]
 pub struct Gate {
-  offset : u64,
-  selector : u16,
-  present : bool,
-  ist : u8, // Interrupt stack table. 3 bits
-  typ : u8, // 4 bits
-  dpl : u8, // Discriptor priviledge level. 2 bits.
+    bytes: [u8; 16]
+}
+
+
+#[repr(C,packed)]
+pub struct IDTPtr {
+    limit: u16,
+    offset: u64
+}
+
+unsafe fn lidt(idtptr: *mut IDTPtr) {
+    asm!("lidt (%rax)" :: "{rax}"(idtptr) :: "volatile");
+}
+
+impl Gate {
+
+    pub fn new(
+        offset: u64,
+        selector: u16,
+        present : bool,
+        ist : u8, // Interrupt stack table. 3 bits
+        typ : u8, // 4 bits
+        dpl : u8, // Discriptor priviledge level. 2 bits.
+    ) -> Gate {
+        Gate{bytes: [
+          (offset & 0xff) as u8,
+          ((offset >> 8) & 0xff) as u8,
+          (selector & 0xff) as u8,
+          ((selector >> 8) & 0xff) as u8,
+          (ist & 0x7),
+          (typ & 0xf) | (dpl<<5) | bool2bit(present),
+          ((offset >> 16) & 0xff) as u8,
+          ((offset >> 24) & 0xff) as u8,
+          ((offset >> 32) & 0xff) as u8,
+          ((offset >> 40) & 0xff) as u8,
+          ((offset >> 48) & 0xff) as u8,
+          ((offset >> 56) & 0xff) as u8,
+          0,0,0,0, // reserved
+        ]}
+    }
 }
 
 fn bool2bit(b : bool) -> u8 {
@@ -16,24 +51,9 @@ fn bool2bit(b : bool) -> u8 {
   }
 }
 
+
+/*
 impl Gate {
-  pub fn marshal(&self) -> [u8; 16] {
-    [
-      (self.offset & 0xff) as u8,
-      ((self.offset >> 8) & 0xff) as u8,
-      (self.selector & 0xff) as u8,
-      ((self.selector >> 8) & 0xff) as u8,
-      (self.ist & 0x7),
-      (self.typ & 0xf) | (self.dpl<<5) | bool2bit(self.present),
-      ((self.offset >> 16) & 0xff) as u8,
-      ((self.offset >> 24) & 0xff) as u8,
-      ((self.offset >> 32) & 0xff) as u8,
-      ((self.offset >> 40) & 0xff) as u8,
-      ((self.offset >> 48) & 0xff) as u8,
-      ((self.offset >> 56) & 0xff) as u8,
-      0,0,0,0, // reserved
-    ]
-  }
 
   pub fn unmarshal(&mut self, buf : &[u8; 16]) {
     self.offset =
@@ -52,3 +72,4 @@ impl Gate {
     self.present = (buf[5] & (1<<7)) != 0;
   }
 }
+*/
