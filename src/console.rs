@@ -22,23 +22,23 @@ impl Console {
     }
 
     pub fn move_cursor(&mut self, x : u8, y : u8) {
-      self.check_bounds(x, y).unwrap();
+        self.check_bounds(x, y).unwrap();
 
-      // The procedure here is pulled from [molloy], mostly for the magic constants.
-      let cmd_port  : u16 = 0x3d4;
-      let data_port : u16 = 0x3d5;
-      let set_hi : u8 = 14;
-      let set_lo : u8 = 15;
+        // The procedure here is pulled from [molloy], mostly for the magic constants.
+        let cmd_port  : u16 = 0x3d4;
+        let data_port : u16 = 0x3d5;
+        let set_hi : u8 = 14;
+        let set_lo : u8 = 15;
 
-      // Cast to usize to avoid overflowing u8:
-      let position = (y as usize) * 80 + (x as usize);
+        // Cast to usize to avoid overflowing u8:
+        let position = (y as usize) * 80 + (x as usize);
 
-      unsafe {
-        portio::outb(cmd_port, set_hi);
-        portio::outb(data_port, (position >> 8) as u8);
-        portio::outb(cmd_port, set_lo);
-        portio::outb(data_port, position as u8);
-      }
+        unsafe {
+            portio::outb(cmd_port, set_hi);
+            portio::outb(data_port, (position >> 8) as u8);
+            portio::outb(cmd_port, set_lo);
+            portio::outb(data_port, position as u8);
+        }
     }
 
     fn check_bounds(x: usize, y: usize) -> Result<(), ()> {
