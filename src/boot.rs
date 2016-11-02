@@ -1,12 +1,13 @@
 
-use super::console;
+use super::console::{get_console, GREEN, BLACK};
 use super::serial;
 use core::fmt::Write;
 
 #[no_mangle]
 pub extern fn bsp_main() {
-  console::get_console().set_cell(4, 2, console::GREEN, console::BLACK, '!' as u8);
-  console::get_console().move_cursor(0, 0);
+  let mut console = get_console();
+  console.set_cell(4, 2, GREEN, BLACK, '!' as u8);
+  console.move_cursor(0, 0);
   serial::init(serial::COM1);
   serial::COM1.write_str("Hello\n").unwrap()
 
