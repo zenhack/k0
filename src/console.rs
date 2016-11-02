@@ -21,7 +21,7 @@ impl Console {
         }
     }
 
-    pub fn move_cursor(&mut self, x : u8, y : u8) {
+    pub fn move_cursor(&mut self, x : usize, y : usize) {
         self.check_bounds(x, y).unwrap();
 
         // The procedure here is pulled from [molloy], mostly for the magic constants.
@@ -41,7 +41,7 @@ impl Console {
         }
     }
 
-    fn check_bounds(x: usize, y: usize) -> Result<(), ()> {
+    fn check_bounds(&self, x: usize, y: usize) -> Result<(), ()> {
         if y >= 25 || x >= 80 {
             Err(())
         } else {
