@@ -13,6 +13,8 @@ pub fn get_console() -> Console {
 
 impl Console {
     pub fn set_cell(&mut self, x : usize, y : usize, fg : Color, bg : Color, chr : u8) {
+        self.check_bounds(x, y).unwrap();
+
         let (Color(fore), Color(back)) = (fg, bg);
         unsafe {
             (*self.video_mem)[y][x] = (chr as u16) | ((back << 4 | fore ) << 8);
@@ -20,16 +22,13 @@ impl Console {
     }
 
     pub fn move_cursor(&mut self, x : u8, y : u8) {
+      self.check_bounds(x, y).unwrap();
+
       // The procedure here is pulled from [molloy], mostly for the magic constants.
       let cmd_port  : u16 = 0x3d4;
       let data_port : u16 = 0x3d5;
       let set_hi : u8 = 14;
       let set_lo : u8 = 15;
-
-      if y >= 25 || x >= 80 {
-        // out of bounds. TODO: we should somehow report this.
-        return;
-      }
 
       // Cast to usize to avoid overflowing u8:
       let position = (y as usize) * 80 + (x as usize);
@@ -40,6 +39,14 @@ impl Console {
         portio::outb(cmd_port, set_lo);
         portio::outb(data_port, position as u8);
       }
+    }
+
+    fn check_bounds(x: usize, y: usize) -> Result<(), ()> {
+        if y >= 25 || x >= 80 {
+            Err(())
+        } else {
+            Ok(())
+        }
     }
 }
 
