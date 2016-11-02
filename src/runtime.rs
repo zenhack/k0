@@ -2,13 +2,14 @@
 
 extern crate rlibc;
 
-//use core::fmt;
+use core::fmt;
 
 #[lang = "eh_personality"] extern fn eh_personality() {}
 #[lang = "panic_fmt"] extern fn panic_fmt() -> ! {loop {}}
 
-// #[allow(unused_variables)]
-// pub extern fn rust_begin_unwind(args : fmt::Arguments, file : &str, line : u32) -> ! {loop{}}
+#[no_mangle]
+#[allow(unused_variables)]
+pub extern fn rust_begin_panic(args : fmt::Arguments, file : &str, line : u32) -> ! {loop{}}
 
 #[no_mangle]
 #[allow(non_snake_case)]
