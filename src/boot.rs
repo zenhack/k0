@@ -1,6 +1,7 @@
 
 use super::console::{get_console, GREEN, BLACK};
 use super::serial;
+use super::bochs;
 use core::fmt::Write;
 
 #[no_mangle]

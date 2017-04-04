@@ -8,6 +8,7 @@ pub mod serial;
 pub mod portio;
 pub mod boot;
 pub mod console;
+pub mod bochs;
 mod sync;
 mod idt;
 

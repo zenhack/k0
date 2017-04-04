@@ -4,3 +4,4 @@ k.elf*
 /boot.iso
 /Cargo.lock
 /target
+/bx_enh_dbg.ini

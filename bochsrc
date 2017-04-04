@@ -1,3 +1,10 @@
 boot: cdrom
 ata0-master: type=cdrom, path=boot.iso, status=inserted
 cpu: count=4
+magic_break: enabled=1
+
+# Enable the graphical debugger. Note that if you're on Windows or
+# MacOS, you'll have to do something else; see
+#
+# http://wiki.osdev.org/Bochs#GUI_debugger
+display_library: x, options="gui_debug"
