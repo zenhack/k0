@@ -29,7 +29,7 @@
 .set GDT_EXEC, (1<<43)
 .set GDT_DESC_TYPE_CODE_DATA, (1<<44)
 .set GDT_PRESENT, (1<<47)
-.set GDT_64, (1<<54)
+.set GDT_64, (1<<53)
 
 .set GDT_MAX_LIMIT, 0xffff | (0xf<<48)
 
