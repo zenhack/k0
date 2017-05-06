@@ -19,6 +19,7 @@
 .set PG_RW, (1<<1)
 .set PG_HUGE, (1<<7)
 
+.set CR0_PAGING_ENABLED, (1<<31)
 .set CR4_PAE, (1<<5)
 
 .set EFER_MSR, 0xc0000080
@@ -53,24 +54,6 @@ bsp_start32:
 	mov $boot_stack, %esp
 	mov 0, %ebp
 
-	call build_page_tables
-	call load_page_table
-	call enable_pae
-	call enable_long_mode
-
-	lgdt gdt_ptr
-
-
-	/* update segment selectors: */
-	movw $GDT_OFFSET_DATA, %ax
-	movw %ax, %ss
-	movw %ax, %ds
-	movw %ax, %es
-	movw %ax, %fs
-	movw %ax, %gs
-
-
-	jmpl $GDT_OFFSET_CODE, $bsp_start64
 
 build_page_tables:
 	/* Identity map the first 2 MiB via a single huge page. That's enough
@@ -87,25 +70,37 @@ build_page_tables:
 	movl $(PG_PRESENT | PG_RW | PG_HUGE), %eax
 	movl %eax, boot_pml2
 
-	ret
-
 load_page_table:
 	movl $boot_pml4, %eax
 	movl %eax, %cr3
-	ret
-
 enable_pae:
 	movl %cr4, %eax
 	orl $CR4_PAE, %eax
 	movl %eax, %cr4
-	ret
-
 enable_long_mode:
 	movl $EFER_MSR, %ecx
 	rdmsr
 	orl $EFER_LONGMODE, %eax
 	wrmsr
-	ret
+
+enable_paging:
+	mov %cr0, %eax
+	orl $CR0_PAGING_ENABLED, %eax
+	movl %eax, %cr0
+
+reload_gdt:
+	lgdt gdt_ptr
+
+	/* update segment selectors: */
+	movw $GDT_OFFSET_DATA, %ax
+	movw %ax, %ss
+	movw %ax, %ds
+	movw %ax, %es
+	movw %ax, %fs
+	movw %ax, %gs
+
+
+	jmpl $GDT_OFFSET_CODE, $bsp_start64
 
 
 .bss
