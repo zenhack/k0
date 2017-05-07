@@ -1,8 +1,10 @@
 
 use super::portio;
 
-pub struct Console {
-    video_mem: *mut [[u16; 80]; 25]
+pub struct Console {}
+
+unsafe fn video_mem() -> *mut [[u16; 80]; 25] {
+    0xb8000 as *mut [[u16; 80]; 25]
 }
 
 // Get a reference to the console.
@@ -10,7 +12,10 @@ pub struct Console {
 // Safety: it is the caller's responsibility to make sure use of this function
 // never results in more than one live Console object.
 pub unsafe fn get_console() -> Console {
-    Console{video_mem: 0xb8000 as *mut [[u16; 80]; 25]}
+    // This is just a phantom object; the address is always fixed, so the struct
+    // needn't contain any information. It's just there so that we can
+    // centralize the use of `unsafe` in the exposed api.
+    Console{}
 }
 
 impl Console {
@@ -19,7 +24,7 @@ impl Console {
 
         let (Color(fore), Color(back)) = (fg, bg);
         unsafe {
-            (*self.video_mem)[y][x] = (chr as u16) | ((back << 4 | fore ) << 8);
+            (*video_mem())[y][x] = (chr as u16) | ((back << 4 | fore ) << 8);
         }
     }
 
