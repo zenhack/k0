@@ -1,5 +1,6 @@
 
-use super::console::{get_console, GREEN, BLACK};
+use super::console;
+use super::console::{get_console, RED, GREEN, BLACK};
 use super::serial;
 use super::bochs;
 use core::fmt::Write;
@@ -10,7 +11,17 @@ pub extern fn bsp_main() {
     console.set_cell(4, 2, GREEN, BLACK, '!' as u8);
     console.move_cursor(0, 0);
     serial::init(serial::COM1);
-    serial::COM1.write_str("Hello\n").unwrap()
+    serial::COM1.write_str("Hello\n").unwrap();
+    let mut w = console::Writer::from_console(console, 0, 0, RED, BLACK);
+    unsafe { bochs::breakpoint() };
+
+    // Note to self: this is causing triple-faults with my toolchain.
+    // the reason is because rustc happens to generate SSE instructions
+    // with it (and doesn't if we leave it out). I need to set up a
+    // proper toolchain before I continue.
+    //
+    // The thing below is likely related.
+    w.write_str("Hello\n").unwrap()
 
     // This is currently expanding to something that calls
     // ::std::somethingsomething, and moreover it's

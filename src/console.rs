@@ -1,10 +1,16 @@
 
+use super::bochs;
+
 use super::portio;
+use core::fmt;
+
+const NUM_COLS: usize = 80;
+const NUM_ROWS: usize = 25;
 
 pub struct Console {}
 
-unsafe fn video_mem() -> *mut [[u16; 80]; 25] {
-    0xb8000 as *mut [[u16; 80]; 25]
+unsafe fn video_mem() -> *mut [[u16; NUM_COLS]; NUM_ROWS] {
+    0xb8000 as *mut [[u16; NUM_COLS]; NUM_ROWS]
 }
 
 // Get a reference to the console.
@@ -48,8 +54,8 @@ impl Console {
         }
     }
 
-    fn check_bounds(&self, x: usize, y: usize) -> Result<(), ()> {
-        if y >= 25 || x >= 80 {
+    fn check_bounds(&mut self, x: usize, y: usize) -> Result<(), ()> {
+        if y >= NUM_ROWS || x >= NUM_COLS {
             Err(())
         } else {
             Ok(())
@@ -57,6 +63,7 @@ impl Console {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct Color(u16);
 
 pub const BLACK         : Color = Color(0x0);
@@ -75,3 +82,83 @@ pub const LIGHT_RED     : Color = Color(0xc);
 pub const LIGHT_MAGENTA : Color = Color(0xd);
 pub const LIGHT_BROWN   : Color = Color(0xe);
 pub const WHITE         : Color = Color(0xf);
+
+pub struct Writer {
+    console: Console,
+    fg: Color,
+    bg: Color,
+    x: usize,
+    y: usize
+}
+
+impl Writer {
+
+    pub fn from_console(mut c: Console, x: usize, y: usize, fg: Color, bg: Color) -> Self {
+        c.move_cursor(x, y);
+        Writer{
+            console: c,
+            fg: fg,
+            bg: bg,
+            x: x,
+            y: y
+        }
+    }
+
+    pub fn to_console(cw: Self) -> Console { cw.console }
+
+    pub fn putc(&mut self, byte: u8) {
+        match byte as char {
+            c if c >= ' ' && c < '~' => {
+                // printable char.
+                self.console.set_cell(self.x, self.y, self.fg, self.bg, byte);
+            }
+            '\n' => {
+                self.x = 0;
+                self.y += 1;
+            }
+            '\t' => {
+                // move to the next tab stop:
+                while {
+                    self.putc(' ' as u8);
+                    self.x % 8 != 0
+                } { /* Note that this is a do-while style loop. */ }
+            }
+            _ => {
+                // some other non-printing character; ignore it.
+            }
+        }
+        if self.x >= NUM_COLS {
+            self.x = 0;
+            self.y += 1;
+        }
+        if self.y >= NUM_ROWS {
+            self.scroll();
+        }
+        self.console.move_cursor(self.x, self.y);
+    }
+
+    fn scroll(&mut self) {
+        for y in 0..NUM_ROWS-1 {
+            for x in 0..NUM_COLS {
+                unsafe {
+                    let arr = video_mem();
+                    (*arr)[x][y] = (*arr)[x][y+1];
+                }
+            }
+        }
+        for x in 0..NUM_COLS {
+            self.console.set_cell(x, NUM_ROWS-1, self.fg, self.bg, ' ' as u8);
+        }
+        self.x = 0;
+        self.y = NUM_ROWS - 1;
+    }
+}
+
+impl fmt::Write for Writer {
+    fn write_str(&mut self, s: &str) -> fmt::Result {
+        for b in s.bytes() {
+            self.putc(b);
+        }
+        Ok(())
+    }
+}
