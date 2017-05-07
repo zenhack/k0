@@ -60,5 +60,5 @@ qemu-grub-gdb: boot.iso
 	qemu-system-x86_64 $(qemu_flags) -cdrom $< -s -S
 
 
-.PHONY: qemu-run qemu-gdb clean
+.PHONY: all clean bochs-run qemu-run qemu-gdb qemu-grub-run qemu-grub-gdb
 .SUFFIXES:
