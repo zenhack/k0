@@ -6,7 +6,7 @@ use core::fmt::Write;
 
 #[no_mangle]
 pub extern fn bsp_main() {
-    let mut console = get_console();
+    let mut console = unsafe { get_console() };
     console.set_cell(4, 2, GREEN, BLACK, '!' as u8);
     console.move_cursor(0, 0);
     serial::init(serial::COM1);

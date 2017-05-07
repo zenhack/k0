@@ -5,9 +5,11 @@ pub struct Console {
     video_mem: *mut [[u16; 80]; 25]
 }
 
-pub fn get_console() -> Console {
-    // FIXME: This is the same object, no matter how many times we return it;
-    // we should do proper synchronization (and define what that means).
+// Get a reference to the console.
+//
+// Safety: it is the caller's responsibility to make sure use of this function
+// never results in more than one live Console object.
+pub unsafe fn get_console() -> Console {
     Console{video_mem: 0xb8000 as *mut [[u16; 80]; 25]}
 }
 
