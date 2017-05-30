@@ -108,7 +108,7 @@ impl Writer {
 
     pub fn putc(&mut self, byte: u8) {
         match byte as char {
-            c if c >= ' ' && c < '~' => {
+            c if c >= ' ' && c <= '~' => {
                 // printable char.
                 self.console.set_cell(self.x, self.y, self.fg, self.bg, byte);
             }
