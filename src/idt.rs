@@ -9,7 +9,7 @@ pub struct Gate {
     offset_lo: u16,
     segment: u16,
     ist: u8, // Only the bottom 3 bits are significant; rest must be zero.
-    type_dpl_p: u8, // three fields on one byte, of sizes 4, 2, and 2 bit
+    type_dpl_p: u8, // three fields on one byte, of sizes 4, 2, and 2 bits
                     // respectively. There is a zero bit before the dpl.
     offset_mid: u16,
     offset_hi: u32,
@@ -23,7 +23,7 @@ pub struct IDTPtr {
 }
 
 
-// A zeroed-out Gate struct, which we use ina couple places. We can't just
+// A zeroed-out Gate struct, which we use in a couple places. We can't just
 // derive Default, since we use it in the top-level definition boot_idt.
 const ZERO_GATE: Gate = Gate{
     offset_lo: 0,
