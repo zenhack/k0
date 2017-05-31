@@ -54,6 +54,15 @@ impl Console {
         }
     }
 
+    pub fn clear(&mut self, bg : Color) {
+        for x in 0..NUM_COLS {
+            for y in 0..NUM_ROWS {
+                // Foreground color is arbitrary; doesn't matter:
+                self.set_cell(x, y, WHITE, bg, ' ' as u8);
+            }
+        }
+    }
+
     fn check_bounds(&mut self, x: usize, y: usize) -> Result<(), ()> {
         if y >= NUM_ROWS || x >= NUM_COLS {
             Err(())
