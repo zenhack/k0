@@ -9,6 +9,7 @@ pub mod portio;
 pub mod boot;
 pub mod console;
 pub mod bochs;
+mod util;
 mod sync;
 mod idt;
 
