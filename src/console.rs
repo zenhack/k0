@@ -111,6 +111,7 @@ impl Writer {
             c if c >= ' ' && c <= '~' => {
                 // printable char.
                 self.console.set_cell(self.x, self.y, self.fg, self.bg, byte);
+                self.x += 1;
             }
             '\n' => {
                 self.x = 0;
