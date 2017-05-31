@@ -13,10 +13,12 @@ unsafe fn video_mem() -> *mut [[u16; NUM_COLS]; NUM_ROWS] {
     0xb8000 as *mut [[u16; NUM_COLS]; NUM_ROWS]
 }
 
-// Get a reference to the console.
-//
-// Safety: it is the caller's responsibility to make sure use of this function
-// never results in more than one live Console object.
+/// Returns a reference to the console.
+///
+/// # Safety
+///
+/// It is the caller's responsibility to make sure use of this function
+/// never results in more than one live Console object.
 pub unsafe fn get_console() -> Console {
     // This is just a phantom object; the address is always fixed, so the struct
     // needn't contain any information. It's just there so that we can
@@ -25,6 +27,10 @@ pub unsafe fn get_console() -> Console {
 }
 
 impl Console {
+    /// Sets the contents of a cell on the screen.
+    ///
+    /// The cell at position `(x, y)` is set to the character `chr`, with a
+    /// foreground color `fg` and background color `bg`.
     pub fn set_cell(&mut self, x : usize, y : usize, fg : Color, bg : Color, chr : u8) {
         self.check_bounds(x, y).unwrap();
 
@@ -34,6 +40,7 @@ impl Console {
         }
     }
 
+    /// Move the hardware cursor to position `(x, y)`.
     pub fn move_cursor(&mut self, x : usize, y : usize) {
         self.check_bounds(x, y).unwrap();
 
@@ -54,7 +61,10 @@ impl Console {
         }
     }
 
-    pub fn clear(&mut self, bg : Color) {
+    /// Clears the screen
+    ///
+    /// The background will be the color `bg`.
+    pub fn clear(&mut self, bg: Color) {
         for x in 0..NUM_COLS {
             for y in 0..NUM_ROWS {
                 // Foreground color is arbitrary; doesn't matter:

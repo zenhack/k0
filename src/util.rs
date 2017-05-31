@@ -2,7 +2,7 @@
 pub mod fmt {
     use core::fmt::{Write, Result};
 
-    // Multiplexer for fmt::Write.
+    /// Multiplexer for `fmt::Write`.
     pub struct MultiWriter <A, B> {
         a: A,
         b: B,
