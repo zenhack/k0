@@ -1,11 +1,11 @@
 
-TARGET ?= x86_64-unknown-linux-gnu
+TARGET ?= x86_64-elf
 
 AS ?= $(TARGET)-as
 LD ?= $(TARGET)-ld
 
 rust_src := $(shell find src/ -name '*.rs')
-rust_lib := target/$(TARGET)/release/libk0.a
+rust_lib := target/x86_64-k0/release/libk0.a
 
 asm_objects := boot32.o boot64.o
 
@@ -14,7 +14,7 @@ all: k.elf32
 clean:
 	find -name 'k.elf*' -delete
 	rm -f *.o boot.iso
-	cargo clean
+	xargo clean
 
 
 # Boot media #
@@ -23,7 +23,7 @@ boot.iso: boot_iso/boot/k.elf32 boot_iso/boot/grub/grub.cfg
 boot_iso/boot/k.elf32: k.elf32
 	cp $< $@
 
-# The kernel proper. Most of the source is rust, which gets handled by cargo;
+# The kernel proper. Most of the source is rust, which gets handled by xargo;
 # all that we have to handle is the assembly source and the linking.
 k.elf64: $(asm_objects) link.ld $(rust_lib)
 	$(LD) -o $@ $(asm_objects) $(rust_lib) -T link.ld --gc-sections
@@ -39,7 +39,7 @@ k.elf32: k.elf64
 %.o: %.s
 	$(AS) -o $@ $<
 $(rust_lib): $(rust_src)
-	cargo build --release --target=$(TARGET)
+	xargo build --release --target=x86_64-k0
 
 # "Run" targets; not building anything, just convenience targets for other
 # tasks. The *-gdb variants start qemu with remote debugging. The qemu-grub-*
