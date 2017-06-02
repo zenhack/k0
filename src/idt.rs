@@ -1,8 +1,3 @@
-
-
-
-
-
 #[repr(C,packed)]
 #[derive(Clone, Copy)]
 pub struct Gate {
