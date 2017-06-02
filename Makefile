@@ -7,14 +7,20 @@ LD ?= $(TARGET)-ld
 rust_src := $(shell find src/ -name '*.rs')
 rust_lib := target/x86_64-k0/release/libk0.a
 
-asm_objects := boot32.o boot64.o
+asm_objects := boot32.o boot64.o isr.o
 
 # "Standard" targets; things which are convential for most Makefiles.
 all: k.elf32
 clean:
 	find -name 'k.elf*' -delete
-	rm -f *.o boot.iso
+	rm -f *.o *_gen.s boot.iso
 	xargo clean
+
+# (Generated) interrupt handler stubs
+isr.o: isr.s isr_gen.s
+	$(AS) -o $@ isr.s
+isr_gen.s: make_isrs.sh
+	./make_isrs.sh > $@
 
 
 # Boot media #
