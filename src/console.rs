@@ -123,7 +123,7 @@ impl Writer {
         }
     }
 
-    pub fn to_console(cw: Self) -> Console { cw.console }
+    pub fn to_console(self) -> Console { self.console }
 
     pub fn putc(&mut self, byte: u8) {
         match byte as char {
