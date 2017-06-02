@@ -36,7 +36,7 @@ const ZERO_GATE: Gate = Gate{
 
 static boot_idt: [Gate; 256] = [ZERO_GATE; 256];
 
-unsafe fn lidt(idtptr: *mut IDTPtr) {
+unsafe fn lidt(idtptr: *const IDTPtr) {
     asm!("lidt (%rax)" :: "{rax}"(idtptr) :: "volatile");
 }
 
