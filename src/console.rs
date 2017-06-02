@@ -13,20 +13,22 @@ unsafe fn video_mem() -> *mut [[u16; NUM_COLS]; NUM_ROWS] {
     0xb8000 as *mut [[u16; NUM_COLS]; NUM_ROWS]
 }
 
-/// Returns a reference to the console.
-///
-/// # Safety
-///
-/// It is the caller's responsibility to make sure use of this function
-/// never results in more than one live Console object.
-pub unsafe fn get_console() -> Console {
-    // This is just a phantom object; the address is always fixed, so the struct
-    // needn't contain any information. It's just there so that we can
-    // centralize the use of `unsafe` in the exposed api.
-    Console{}
-}
-
+/// A reference to the x86 text video console.
 impl Console {
+
+    /// Returns a reference to the console.
+    ///
+    /// # Safety
+    ///
+    /// It is the caller's responsibility to make sure use of this function
+    /// never results in more than one live Console object.
+    pub unsafe fn get_global() -> Self {
+        // This is just a phantom object; the address is always fixed, so the struct
+        // needn't contain any information. It's just there so that we can
+        // centralize the use of `unsafe` in the exposed api.
+        Console{}
+    }
+
     /// Sets the contents of a cell on the screen.
     ///
     /// The cell at position `(x, y)` is set to the character `chr`, with a
@@ -73,6 +75,19 @@ impl Console {
         }
     }
 
+    /// Consume the console, converting it to a writer starting at the screen
+    /// position (x,y), and using the given foreground and background color.
+    pub fn to_writer(mut self, x: usize, y: usize, fg: Color, bg: Color) -> Writer {
+        self.move_cursor(x, y);
+        Writer{
+            console: self,
+            fg: fg,
+            bg: bg,
+            x: x,
+            y: y
+        }
+    }
+
     fn check_bounds(&mut self, x: usize, y: usize) -> Result<(), ()> {
         if y >= NUM_ROWS || x >= NUM_COLS {
             Err(())
@@ -102,6 +117,7 @@ pub const LIGHT_MAGENTA : Color = Color(0xd);
 pub const LIGHT_BROWN   : Color = Color(0xe);
 pub const WHITE         : Color = Color(0xf);
 
+/// An implementation of core::std::Write on top of a Console.
 pub struct Writer {
     console: Console,
     fg: Color,
@@ -112,17 +128,7 @@ pub struct Writer {
 
 impl Writer {
 
-    pub fn from_console(mut c: Console, x: usize, y: usize, fg: Color, bg: Color) -> Self {
-        c.move_cursor(x, y);
-        Writer{
-            console: c,
-            fg: fg,
-            bg: bg,
-            x: x,
-            y: y
-        }
-    }
-
+    /// Cosnume the writer, returning the underlying Console reference.
     pub fn to_console(self) -> Console { self.console }
 
     pub fn putc(&mut self, byte: u8) {
