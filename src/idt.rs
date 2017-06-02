@@ -72,8 +72,9 @@ impl Gate {
     }
 
     pub fn set_present(&mut self, present: bool) {
+        let present_bit = if present { 1 } else { 0 };
         self.type_dpl_p &= !(1 << 7);
-        self.type_dpl_p |= bool2bit(present) << 7;
+        self.type_dpl_p |= present_bit << 7;
     }
 
     pub fn get_present(&self) -> bool {
@@ -100,13 +101,6 @@ impl Gate {
         self.segment
     }
 
-}
-
-fn bool2bit(b : bool) -> u8 {
-  match b {
-    true => 1,
-    false => 0
-  }
 }
 
 
