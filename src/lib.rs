@@ -13,4 +13,8 @@ mod util;
 mod sync;
 mod idt;
 
+mod idt_gen {
+  include!(concat!(env!("OUT_DIR"), "/idt_gen.rs"));
+}
+
 // vim: set ts=2 sw=2 et :

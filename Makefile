@@ -4,7 +4,7 @@ TARGET ?= x86_64-elf
 AS ?= $(TARGET)-as
 LD ?= $(TARGET)-ld
 
-rust_src := $(shell find src/ -name '*.rs')
+rust_src := $(shell find src/ -name '*.rs') build.rs
 rust_lib := target/x86_64-k0/release/libk0.a
 
 asm_objects := boot32.o boot64.o isr.o

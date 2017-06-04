@@ -2,6 +2,7 @@
 name = "k0"
 version = "0.1.0"
 authors = ["Ian Denhardt <ian@zenhack.net>"]
+build = "build.rs"
 
 [lib]
 crate-type = ["staticlib"]

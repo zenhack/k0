@@ -17,10 +17,10 @@ pub struct IDTPtr {
     offset: u64
 }
 
-
 // A zeroed-out Gate struct, which we use in a couple places. We can't just
-// derive Default, since we use it in the top-level definition boot_idt.
-const ZERO_GATE: Gate = Gate{
+// derive Default, since we use it in the top-level definition BOOT_IDT in
+// idt_gen.
+pub const ZERO_GATE: Gate = Gate{
     offset_lo: 0,
     segment: 0,
     ist: 0,
@@ -29,8 +29,6 @@ const ZERO_GATE: Gate = Gate{
     offset_hi: 0,
 };
 
-static boot_idt: [Gate; 256] = [ZERO_GATE; 256];
-
 unsafe fn lidt(idtptr: *const IDTPtr) {
     asm!("lidt (%rax)" :: "{rax}"(idtptr) :: "volatile");
 }
@@ -38,13 +36,13 @@ unsafe fn lidt(idtptr: *const IDTPtr) {
 impl Gate {
 
     pub fn new(
-        offset: u64,
+        handler: unsafe extern fn() -> (),
         segment: u16,
         present : bool,
         ist : u8, // Interrupt stack table. 3 bits
-        typ : u8, // 4 bits
         dpl : u8, // Discriptor priviledge level. 2 bits.
     ) -> Gate {
+        let offset = handler as u64;
         let mut ret = ZERO_GATE;
         ret.set_offset(offset);
         ret.set_segment(segment);
