@@ -3,7 +3,7 @@ use super::console::{Console, RED, GREEN, BLACK};
 use super::serial;
 use super::bochs;
 use super::util::fmt::MultiWriter;
-use super::idt_gen::init_boot_idt;
+use super::idt;
 use core::fmt::Write;
 
 #[no_mangle]
@@ -17,5 +17,7 @@ pub extern fn bsp_main() {
         console.to_writer(0, 0, RED, BLACK)
     );
     writeln!(w, "Hello, World!").unwrap();
-    unsafe { init_boot_idt(); }
+    unsafe { idt::init(); }
+    unsafe { bochs::breakpoint(); }
+    unsafe { asm!("int $$0x7"); }
 }

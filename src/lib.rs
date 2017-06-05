@@ -11,6 +11,7 @@ pub mod console;
 pub mod bochs;
 mod util;
 mod sync;
+mod idt_common;
 mod idt;
 
 mod idt_gen {

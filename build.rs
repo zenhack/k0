@@ -4,9 +4,12 @@ use std::env;
 use std::path::Path;
 
 fn write_to<W: Write>(w: &mut W) {
-    w.write_all(b"use super::idt::{Gate, ZERO_GATE};\n").unwrap();
-    w.write_all(b"static mut BOOT_IDT: [Gate; 256] = [ZERO_GATE; 256];\n").unwrap();
-    w.write_all(b"extern {\n").unwrap();
+    w.write_all(
+        b"use super::idt_common::{Gate, BOOT_IDT};\n\
+
+          extern {\n\
+          "
+          ).unwrap();
     for i in 0..256 {
         writeln!(w, "    #[link(name = \"isr{0}\")] fn isr{0} () -> ();", i).unwrap();
     }
