@@ -83,7 +83,7 @@ impl Gate {
         if dpl > 3 {
             panic!("DPL out of range");
         }
-        self.type_dpl_p &= 3<<5;
+        self.type_dpl_p &= !(3 << 5);
         self.type_dpl_p |= dpl << 5;
     }
 
