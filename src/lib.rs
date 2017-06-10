@@ -12,7 +12,7 @@ pub mod bochs;
 mod util;
 mod sync;
 mod idt_common;
-mod idt;
+pub mod idt;
 
 mod idt_gen {
   include!(concat!(env!("OUT_DIR"), "/idt_gen.rs"));

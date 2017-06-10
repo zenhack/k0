@@ -18,6 +18,6 @@ pub extern fn bsp_main() {
     );
     writeln!(w, "Hello, World!").unwrap();
     unsafe { idt::init(); }
-    unsafe { bochs::breakpoint(); }
     unsafe { asm!("int $$0x7"); }
+    writeln!(w, "Returned from interrupt.");
 }
