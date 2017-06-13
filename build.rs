@@ -5,7 +5,7 @@ use std::path::Path;
 
 fn write_to<W: Write>(w: &mut W) {
     w.write_all(
-        b"use super::idt_common::{Gate, BOOT_IDT};\n\
+        b"use super::{Gate, BOOT_IDT};\n\
 
           extern {\n\
           "

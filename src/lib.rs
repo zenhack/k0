@@ -4,18 +4,13 @@
 #![no_std]
 
 pub mod runtime;
-pub mod serial;
-pub mod portio;
+mod serial;
+mod portio;
 pub mod boot;
 pub mod console;
 pub mod bochs;
 mod util;
-mod sync;
-mod idt_common;
+pub mod sync;
 pub mod idt;
-
-mod idt_gen {
-  include!(concat!(env!("OUT_DIR"), "/idt_gen.rs"));
-}
 
 // vim: set ts=2 sw=2 et :

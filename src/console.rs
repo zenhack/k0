@@ -1,6 +1,3 @@
-
-use super::bochs;
-
 use super::portio;
 use core::fmt;
 
