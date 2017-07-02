@@ -37,8 +37,7 @@ isr_stub:
 	popq %rdi
 	popq %rax
 
-	/* Pop the interrupt number and the error code. TODO: do we need
-	   to treat the no-error cases differently? */
+	/* Pop the interrupt number and the error code. */
 	addq $16, %rsp
 
 	iret
