@@ -117,7 +117,7 @@ boot_stack: /* stack grows down on x86, so this is the base of the stack. */
 gdt:
 	.quad 0
 	.quad GDT_DESC_TYPE_CODE_DATA | GDT_MAX_LIMIT | GDT_PRESENT | GDT_RW | GDT_EXEC | GDT_64
-	.quad GDT_DESC_TYPE_CODE_DATA | GDT_MAX_LIMIT | GDT_PRESENT | GDT_RW
+	.quad GDT_DESC_TYPE_CODE_DATA | GDT_MAX_LIMIT | GDT_PRESENT | GDT_RW | GDT_64
 gdt_ptr:
 	.word ((3*8) - 1) /* 3 entries at 8 bytes each, -1 because gdt weirdness */
 	.quad gdt
