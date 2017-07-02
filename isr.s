@@ -40,4 +40,4 @@ isr_stub:
 	/* Pop the interrupt number and the error code. */
 	addq $16, %rsp
 
-	iret
+	iretq
