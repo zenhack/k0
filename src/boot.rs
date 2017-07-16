@@ -19,4 +19,6 @@ pub extern fn bsp_main() {
     unsafe { idt::init(); }
     unsafe { asm!("int $$0x7"); }
     writeln!(w, "Returned from interrupt.").unwrap();
+
+    panic!("Let's see how panicing goes!");
 }
