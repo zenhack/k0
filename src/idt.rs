@@ -2,6 +2,7 @@ use core::mem::size_of;
 
 /// Saved state passed to a rust interrupt handler.
 #[repr(C,packed)]
+#[derive(Debug)]
 pub struct IsrSave {
 	r11: u64,
 	r10: u64,
@@ -130,7 +131,8 @@ mod gen {
 }
 
 fn no_int_handler(state: &mut IsrSave) {
-    panic!("No interrupt handler for interrupt #{}!", state.int_no)
+    panic!("No interrupt handler for interrupt #{}!\n\
+            Interrupt state: {:?}\n", state.int_no, state);
 }
 
 /// This is the rust entry point for our interrupt handlers; it is invoked
