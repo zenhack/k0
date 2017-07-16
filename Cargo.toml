@@ -9,6 +9,7 @@ crate-type = ["staticlib"]
 
 [dependencies]
 rlibc = "1.0.0"
+bitflags = "0.9.1"
 
 [profile.dev]
 panic = "abort"

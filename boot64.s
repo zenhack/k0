@@ -4,6 +4,11 @@
 bsp_start64:
 	movq $_stack_base-8, %rsp
 	movq $0, %rbp
+
+	/* Pass the multiboot info structure: */
+	movq $0, %rdi
+	movl %ebx, %edi
+
 	call bsp_main
 
 hang:
