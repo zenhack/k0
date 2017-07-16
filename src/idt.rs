@@ -68,7 +68,8 @@ impl Gate {
     ///
     /// `handler` is the interrupt handler. Note that these to *not* follow
     /// the same calling convention as rust and/or C -- they must be defined
-    /// in assembly. See `isr.s` and `make_isrs.sh`.
+    /// in assembly. See `isr.s` and `make_isrs.sh`. TODO: we should probably
+    /// put some other type there.
     ///
     /// the other fields correspond to what is documented in the intel manual.
     ///
