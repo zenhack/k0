@@ -20,5 +20,13 @@ pub extern fn bsp_main(mboot: *const multiboot::Info) {
 
     writeln!(w, "Booting k0 (pre-alpha)...").unwrap();
     let mboot_info = unsafe { *mboot };
-    writeln!(w, "mem info: {:?}", mboot_info.mem_info()).unwrap();
+
+    writeln!(w, "Multiboot info structure: {:?}", mboot_info);
+
+    match mboot_info.mmap() {
+        None => writeln!(w, "No memory map info").unwrap(),
+        Some(m) => for ent in m.entries() {
+            writeln!(w, "Memory map entry: {:?}", ent).unwrap();
+        }
+    }
 }

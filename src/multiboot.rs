@@ -1,4 +1,7 @@
 
+use core::slice;
+use core::iter::Iterator;
+
 #[derive(Clone, Copy, Debug)]
 #[repr(C)]
 pub struct Info {
@@ -39,5 +42,62 @@ impl Info {
         } else {
             None
         }
+    }
+
+    /// Return the memory map, if present.
+    pub fn mmap<'a>(&'a self) -> Option<MMap<'a>> {
+        if self.flags.contains(HAVE_MMAP) {
+            unsafe {
+                Some(MMap {
+                    buf: slice::from_raw_parts(self.mmap_addr as *const u8,
+                                               self.mmap_length as usize)
+                })
+            }
+        } else {
+            None
+        }
+    }
+}
+
+pub struct MMap<'a> {
+    buf: &'a [u8]
+}
+
+pub struct MMapIter<'a> {
+    mmap: &'a MMap<'a>,
+    offset: usize,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug)]
+pub struct MMapEnt {
+    start: u64,
+    size: u64,
+    typ: u32,
+}
+
+impl<'a> Iterator for MMapIter<'a> {
+    type Item = MMapEnt ;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.offset - 20 > self.mmap.buf.len() {
+            // 20 is the minimum length of an entry.
+            return None
+        } else {
+            unsafe {
+                let ent_size = *(&self.mmap.buf[self.offset]
+                                 as *const u8 as *const u32);
+                let ent      = *(&self.mmap.buf[self.offset+4]
+                                 as *const u8 as *const MMapEnt);
+                self.offset += 4 + (ent_size as usize);
+                Some(ent)
+            }
+        }
+    }
+}
+
+impl<'a> MMap<'a> {
+    pub fn entries(&'a self) -> MMapIter<'a> {
+        MMapIter{mmap: self, offset: 0}
     }
 }
