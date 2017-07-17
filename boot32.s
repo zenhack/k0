@@ -8,11 +8,13 @@
 
 .extern bsp_start64
 
+# Requests mem_* from grub.
+.set MBOOT_MEM_INFO, (1<<1)
 # Indicates the presence of the address fields in the multiboot header
 .set MBOOT_AOUT_KLUDGE, (1<<16)
 
 .set MBOOT_MAGIC, 0x1badb002
-.set MBOOT_FLAGS, MBOOT_AOUT_KLUDGE
+.set MBOOT_FLAGS, (MBOOT_MEM_INFO | MBOOT_AOUT_KLUDGE)
 .set MBOOT_CHKSUM, (-(MBOOT_MAGIC + MBOOT_FLAGS))
 
 .set PG_PRESENT, (1<<0)
