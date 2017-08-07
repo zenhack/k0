@@ -47,22 +47,20 @@ k.elf32: k.elf64
 $(rust_lib): $(rust_src)
 	xargo build --release --target=x86_64-k0
 
-# "Run" targets; not building anything, just convenience targets for other
-# tasks. The *-gdb variants start qemu with remote debugging. The qemu-grub-*
-# variants boot qemu from a cdrom with grub, whereas the other qemu targets
-# qemu's built-in multiboot support. bochs-run boots bochs from the cdrom.
-bochs-run: boot.iso
-	bochs
-
 qemu_flags := -serial stdio
 
-qemu-run: k.elf32
-	qemu-system-x86_64 $(qemu_flags) -kernel $<
-qemu-gdb: k.elf32
-	qemu-system-x86_64 $(qemu_flags) -kernel $< -s -S
-qemu-grub-run: boot.iso
+# "Run" targets; not building anything, just convenience targets for other
+# tasks. qemu-gdb starts qemu with remote debugging. Each of these boots from
+# the custom grub ISO.
+#
+# N.B. There used to be targets that used qemu's -kernel option insead of the
+# cd, but it seems to do odd things with the memory map, so we've stopped
+# supporting it.
+bochs-run: boot.iso
+	bochs
+qemu-run: boot.iso
 	qemu-system-x86_64 $(qemu_flags) -cdrom $<
-qemu-grub-gdb: boot.iso
+qemu-gdb: boot.iso
 	qemu-system-x86_64 $(qemu_flags) -cdrom $< -s -S
 
 
