@@ -5,7 +5,7 @@ AS ?= $(TARGET)-as
 LD ?= $(TARGET)-ld
 
 rust_src := $(shell find src/ -name '*.rs') build.rs
-rust_lib := target/x86_64-k0/release/libk0.a
+rust_lib := target/x86_64-k0/debug/libk0.a
 
 asm_objects := boot32.o boot64.o isr.o
 
@@ -45,7 +45,7 @@ k.elf32: k.elf64
 %.o: %.s
 	$(AS) -o $@ $<
 $(rust_lib): $(rust_src)
-	xargo build --release --target=x86_64-k0
+	xargo build --target=x86_64-k0
 
 qemu_flags := -serial stdio
 
