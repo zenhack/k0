@@ -21,15 +21,15 @@ pub extern fn bsp_main(mboot: *const multiboot::Info) {
     writeln!(w, "Booting k0 (pre-alpha)...").unwrap();
     let mboot_info = unsafe { *mboot };
 
-    writeln!(w, "mboot info structure address: {}", mboot as usize).unwrap();
+    writeln!(w, "mboot info structure address: 0x{:x}", mboot as usize).unwrap();
 
     writeln!(w, "Multiboot info structure: {:?}", mboot_info).unwrap();
 
     match mboot_info.mem_info() {
         None => writeln!(w, "No mem_* fields!").unwrap(),
         Some((lo, hi)) => {
-            writeln!(w, "Low memory  : {}", lo).unwrap();
-            writeln!(w, "High memory : {}", hi).unwrap();
+            writeln!(w, "Low memory  : 0x{:x}", lo).unwrap();
+            writeln!(w, "High memory : 0x{:x}", hi).unwrap();
         }
     }
 
