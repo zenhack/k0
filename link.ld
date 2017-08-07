@@ -31,26 +31,31 @@ SECTIONS
 	. = 0x7e00;
 	.mboot :
 	{
-		KEEP(*(.mboot))
 		. = ALIGN(4096);
+		KEEP(*(.mboot))
 	} >kimage
 	.text :
 	{
+		. = ALIGN(4096);
 		code = .; _code = .; __code = .;
 		*(.text)
-		. = ALIGN(4096);
+		*(.text.*)
 	} >kimage
 	.data :
 	{
+		. = ALIGN(4096);
 		data = .; _data = .; __data = .;
 		*(.data)
+		*(.data.*)
 		*(.rodata)
-		. = ALIGN(4096);
+		*(.rodata.*)
 	} >kimage
 	.bss :
 	{
+		. = ALIGN(4096);
 		bss = .; _bss = .; __bss = .;
 		*(.bss)
+		*(.bss.*)
 		. = ALIGN(4096);
 	} >kimage
 	kend = .; _kend = .; __kend = .;
