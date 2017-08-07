@@ -39,6 +39,10 @@ SECTIONS
 		. = ALIGN(4096);
 		code = .; _code = .; __code = .;
 		*(.text)
+		/* rust puts each of it's modules in it's own section like
+		 * `.text.<C++-style-mangled-module-name>`; as such *(.text)
+		 * won't get much on its own (just asm). So we do *(.text.*),
+		 * *(.data.*), etc. as well. */
 		*(.text.*)
 	} >kimage
 	.data :
