@@ -161,11 +161,11 @@ impl Writer {
     }
 
     fn scroll(&mut self) {
+        let arr = unsafe { video_mem() };
         for y in 0..NUM_ROWS-1 {
             for x in 0..NUM_COLS {
                 unsafe {
-                    let arr = video_mem();
-                    (*arr)[x][y] = (*arr)[x][y+1];
+                    (*arr)[y][x] = (*arr)[y+1][x];
                 }
             }
         }
