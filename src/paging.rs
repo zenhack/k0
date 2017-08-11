@@ -1,6 +1,8 @@
+use core::fmt;
 
 bitflags! {
-    struct PageFlags: u64 {
+    #[repr(C)]
+    pub struct PageFlags: u64 {
         // Meaningful for all paging structures:
         const PRESENT      = 1 <<  0;
         const RW           = 1 <<  1;
@@ -20,17 +22,29 @@ bitflags! {
         const PKE_MASK = 0b1111 << 59;
 
 
-        const PG_4K_PHYSADDR_MASK = (1 << 12) - 1;
-        const PG_2M_PHYSADDR_MASK = PG_PHYSADDR_MASK_4K << 9;
-        const PG_1G_PHYSADDR_MASK = PG_PHYSADDR_MASK_2M << 9;
+        // TODO: make these a bit prettier; had them detrmined in terms of
+        // smaller constants, but wouldn't type check.
+        const PG_4K_PHYSADDR_MASK =  (1 << 12) - 1       ;
+        const PG_2M_PHYSADDR_MASK = ((1 << 12) - 1) <<  9;
+        const PG_1G_PHYSADDR_MASK = ((1 << 12) - 1) << 18;
 
-        const PGTBL_PHYSADDR_MASK = PG_2M_PHYSADDR_MASK;
-        const PGDIR_PHYSADDR_MASK = PG_1G_PHYSADDR_MASK;
-        const PDPTR_PHYSADDR_MASK = PD_PHYSADDR_MASK << 9;
+        const PGTBL_PHYSADDR_MASK = ((1 << 12) - 1) <<  9;
+        const PGDIR_PHYSADDR_MASK = ((1 << 12) - 1) << 18;
+        const PDPTR_PHYSADDR_MASK = ((1 << 12) - 1) << 27;
     }
 }
 
 #[repr(C)]
-struct PgStruct<T> {
+pub struct PgStruct {
     ents: [PageFlags; 512],
+}
+
+// We implement this manually, since [Foo; 512] doesn't implement Debug (or any
+// array with length > 32
+impl fmt::Debug for PgStruct {
+    fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
+        try!(f.write_str("PgStruct{ "));
+        try!((&self.ents[..]).fmt(f));  // slices *do* impl Debug.
+        f.write_str("}")
+    }
 }

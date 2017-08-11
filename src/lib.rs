@@ -15,7 +15,7 @@ pub mod bochs;
 mod util;
 pub mod sync;
 pub mod idt;
-
 pub mod multiboot;
+pub mod paging;
 
 // vim: set ts=2 sw=2 et :

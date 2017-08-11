@@ -4,7 +4,10 @@ use super::serial;
 use super::util::fmt::MultiWriter;
 use super::idt;
 use super::multiboot;
+use super::paging;
 use core::fmt::Write;
+
+extern { static boot_pml4: paging::PgStruct; }
 
 #[no_mangle]
 pub extern fn bsp_main(mboot: *const multiboot::Info) {
@@ -39,4 +42,6 @@ pub extern fn bsp_main(mboot: *const multiboot::Info) {
             writeln!(w, "Memory map entry: {:?}", ent).unwrap();
         }
     }
+
+    writeln!(w, "PML4: {:?}", unsafe { &boot_pml4 }).unwrap()
 }

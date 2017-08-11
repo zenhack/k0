@@ -6,6 +6,8 @@
 .global bsp_start32
 .global mboot_header
 
+.globl boot_pml4
+
 .extern bsp_start64
 
 # Requests mem_* from grub.
