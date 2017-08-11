@@ -43,7 +43,7 @@ pub struct PgStruct {
 // array with length > 32
 impl fmt::Debug for PgStruct {
     fn fmt(&self, f: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-        try!(f.write_str("PgStruct{ "));
+        try!(f.write_str("PgStruct{"));
         try!((&self.ents[..]).fmt(f));  // slices *do* impl Debug.
         f.write_str("}")
     }
