@@ -31,6 +31,24 @@ bitflags! {
         const PGTBL_PHYSADDR_MASK = ((1 << 12) - 1) <<  9;
         const PGDIR_PHYSADDR_MASK = ((1 << 12) - 1) << 18;
         const PDPTR_PHYSADDR_MASK = ((1 << 12) - 1) << 27;
+
+        const PML4_PHYSADDR_MASK = !((1 << 63) | ((1 << 12 - 1)));
+    }
+}
+
+pub struct CR3Value {
+    flags: PageFlags
+}
+
+pub unsafe fn get_cr3() -> CR3Value {
+    let result: CR3Value;
+    asm!("movq %cr3, %rax" : "={rax}"(result));
+    return result;
+}
+
+impl CR3Value {
+    pub fn pml4_addr(&self) -> *mut PgStruct {
+        (self.flags & PML4_PHYSADDR_MASK).bits() as *mut PgStruct
     }
 }
 
