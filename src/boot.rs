@@ -43,7 +43,7 @@ pub extern fn bsp_main(mboot: *const multiboot::Info) {
     }
 
     let boot_pml4 : &'static mut paging::PgStruct = unsafe {
-        mem::transmute(paging::get_cr3().pml4_addr())
+        mem::transmute::<*mut paging::PgStruct, _>(paging::get_cr3().pml4_addr())
     };
     writeln!(w, "PML4: {:?}", boot_pml4).unwrap()
 }
