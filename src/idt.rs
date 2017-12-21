@@ -1,8 +1,8 @@
 use core::mem::size_of;
 
 /// Saved state passed to a rust interrupt handler.
-#[repr(C,packed)]
-#[derive(Debug)]
+#[repr(C)]
+#[derive(Clone,Copy,Debug)]
 pub struct IsrSave {
 	r11: u64,
 	r10: u64,
