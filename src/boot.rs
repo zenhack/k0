@@ -1,13 +1,13 @@
 
 use super::console::{Console, LIGHT_GREY, BLACK};
+use super::hwregs;
 use super::serial;
 use super::util::fmt::MultiWriter;
 use super::idt;
 use super::multiboot;
 use super::paging;
 use core::fmt::Write;
-
-extern { static boot_pml4: paging::PgStruct; }
+use core::mem;
 
 #[no_mangle]
 pub extern fn bsp_main(mboot: *const multiboot::Info) {
@@ -43,5 +43,8 @@ pub extern fn bsp_main(mboot: *const multiboot::Info) {
         }
     }
 
-    writeln!(w, "PML4: {:?}", unsafe { &boot_pml4 }).unwrap()
+    let boot_pml4 : &'static mut paging::PgStruct = unsafe {
+        mem::transmute(hwregs::get_cr3())
+    };
+    writeln!(w, "PML4: {:?}", boot_pml4).unwrap()
 }

@@ -10,6 +10,7 @@ extern crate bitflags;
 pub mod runtime;
 mod serial;
 mod portio;
+mod hwregs;
 pub mod boot;
 pub mod console;
 pub mod bochs;
