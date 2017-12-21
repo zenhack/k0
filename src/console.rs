@@ -114,7 +114,7 @@ pub const LIGHT_MAGENTA : Color = Color(0xd);
 pub const LIGHT_BROWN   : Color = Color(0xe);
 pub const WHITE         : Color = Color(0xf);
 
-/// An implementation of core::std::Write on top of a Console.
+/// An implementation of core::fmt::Write on top of a Console.
 pub struct Writer {
     console: Console,
     fg: Color,
@@ -141,10 +141,10 @@ impl Writer {
             }
             '\t' => {
                 // move to the next tab stop:
-                while {
+                self.putc(' ' as u8);
+                while self.x % 8 != 0 {
                     self.putc(' ' as u8);
-                    self.x % 8 != 0
-                } { /* Note that this is a do-while style loop. */ }
+                }
             }
             _ => {
                 // some other non-printing character; ignore it.
