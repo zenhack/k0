@@ -45,7 +45,9 @@ k.elf32: k.elf64
 %.o: %.s
 	$(AS) -o $@ $<
 $(rust_lib): $(rust_src)
-	xargo build --target=x86_64-k0
+	# Set RUST_TARGET_PATH to work around
+	# https://github.com/japaric/xargo/issues/44
+	RUST_TARGET_PATH=$(PWD) xargo build --target=x86_64-k0
 
 qemu_flags := -serial stdio
 
