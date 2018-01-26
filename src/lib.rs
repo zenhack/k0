@@ -18,5 +18,6 @@ pub mod sync;
 pub mod idt;
 pub mod multiboot;
 pub mod paging;
+mod heap;
 
 // vim: set ts=2 sw=2 et :

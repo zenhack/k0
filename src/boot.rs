@@ -1,4 +1,5 @@
 
+use super::heap::Heap;
 use super::console::{Console, LIGHT_GREY, BLACK};
 use super::serial;
 use super::util::fmt::MultiWriter;
@@ -7,6 +8,15 @@ use super::multiboot;
 use super::paging;
 use core::fmt::Write;
 use core::mem;
+
+fn test_heap<W:Write>(w: &mut W, hi: u32) {
+    let mut h = unsafe { Heap::new(1 << 20, hi as usize * 1024) };
+
+    let x = h.alloc(23);
+    let y = h.alloc(20);
+    let z = *x + *y;
+    writeln!(w, "x ({}) + y ({}) = z ({})", *x, *y, z).unwrap();
+}
 
 #[no_mangle]
 pub extern fn bsp_main(mboot: *const multiboot::Info) {
@@ -32,6 +42,7 @@ pub extern fn bsp_main(mboot: *const multiboot::Info) {
         Some((lo, hi)) => {
             writeln!(w, "Low memory  : 0x{:x}", lo).unwrap();
             writeln!(w, "High memory : 0x{:x}", hi).unwrap();
+            test_heap(&mut w, hi);
         }
     }
 
